@@ -40,12 +40,6 @@ class DeefyRepository
         return self::$instance;
     }
 
-    public function recupererPlaylist(int $id):array{
-        $sql = $this->db->prepare("SELECT * FROM playlist WHERE id = :id;");
-        $sql -> bindParam(':id', $id, PDO::PARAM_INT);
-        $sql->execute();
-        return $sql->fetchAll(PDO::FETCH_OBJ);
-    }
 
     public function saveEmptyPlaylist(Playlist $playlist) : object
     {
@@ -66,12 +60,6 @@ class DeefyRepository
         return $sqlSelect->fetch(PDO::FETCH_OBJ);
     }
 
-    public function sauvegarderAudio(AudioTrack $track){
-        if($track instanceof AlbumTrack){
-            $sql = $this->db->prepare("insert into track (titre, genre, duree, filename, type, artiste_album, annee_album, numero_album) values ({$track->__get('titre')}, {$$track->__get('genre')}, {$track->__get('duree')}, {$track->__get('nom_fichier_audio')}, 'A', {$track->__get('artiste_album')}, {$track->__get('annee')}, {$track->__get('nb_piste')});");
-        }
-        //else
-    }
 
     public function savePodcastTrack(PodcastTrack $track):object{
         if(!is_null($track)){
