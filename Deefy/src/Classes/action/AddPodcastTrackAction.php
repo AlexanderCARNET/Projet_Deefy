@@ -3,7 +3,6 @@
 namespace iutnc\deefy\action;
 
 use iutnc\deefy\audio\lists\Playlist;
-use iutnc\deefy\audio\tracks\AudioTrack;
 use iutnc\deefy\audio\tracks\PodcastTrack;
 
 class AddPodcastTrackAction extends Action
