@@ -10,6 +10,7 @@ use iutnc\deefy\action\AddPodcastTrackAction;
 use iutnc\deefy\action\DefaultAction;
 use iutnc\deefy\action\DisplayPlaylistAction;
 use iutnc\deefy\action\DisplayPlaylistIdAction;
+use iutnc\deefy\action\DisplaySavePlaylist;
 use iutnc\deefy\auth\Authnprovider;
 
 class Dispatcher
@@ -49,8 +50,11 @@ class Dispatcher
                         //
                     }
                 case 'display-playlist':
-                        $action = new DisplayPlaylistIdAction();
-                        break;
+                    $action = new DisplayPlaylistIdAction();
+                    break;
+                case 'user-playlist':
+                    $action = new DisplaySavePlaylist();
+                    break;
                 default:
                     $action = new DefaultAction();
                     break;
@@ -85,7 +89,8 @@ class Dispatcher
                 <a href="?action=playlist">Playlist</a> | 
                 <a href="?action=add-playlist">Creer ou ajouter un playlist</a> |    
                 <a href="?action=add-track">Ajouter un track</a>    |   
-                <a href="?action=display-playlist">Recuperer une playlist par ID</a>
+                <a href="?action=display-playlist">Recuperer une playlist par ID</a>    |   
+                <a href="?action=user-playlist">Afficher les playlist de User</a>
             </nava>
             <main>'.$html.
             '</main>
