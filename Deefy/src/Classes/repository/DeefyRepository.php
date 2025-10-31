@@ -201,4 +201,28 @@ class DeefyRepository
         }
         return 0;
     }
+
+    /**
+     * Fonction qui donne toutes les playlists de l'utilisateur, l'utilisateur sera trouvé avec son email et son identifiant passés en paramètre.
+     * Elle renverra un tableau de playlists.
+     *
+     * @param int $idUser
+     * @param string $email
+     * @return array|null
+     * @throws \Exception
+     */
+    public function findAllUserPlaylists(int $idUser, string $email):?array{
+        $sql = $this->db->prepare("select up.id_pl from user u inner join user2playlist up on up.id_user=u.id where u.id = :idUser and u.email = :email;");
+        $sql->execute([':idUser' => $idUser, ':email' => $email]);
+
+        //Vérifie s'il contient quelque chose à l'intérieur, sinon il retourne null
+        if($sql->rowCount() > 0){
+            $playlists = [];
+            while($allPlaylist = $sql->fetch(PDO::FETCH_OBJ)){
+                $playlists[] = $this->findPlayById($allPlaylist->id_pl);
+            }
+            return $playlists;
+        }
+        return null;
+    }
 }
