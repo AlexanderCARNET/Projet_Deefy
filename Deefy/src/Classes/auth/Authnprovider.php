@@ -62,8 +62,15 @@ class Authnprovider
         return (!$length && $digit && $special && $lower && $upper);
     }
 
+    /**
+     * fonction de déconnexion qui déconnecte l'utilisateur et supprime la playlist enregistrée
+     * @return void
+     */
     public static function logout():void{
         unset($_SESSION['user']);
+        if(isset($_SESSION['playlist'])){
+            unset($_SESSION['playlist']);
+        }
     }
 
     public static function getSignedInUser():mixed{
