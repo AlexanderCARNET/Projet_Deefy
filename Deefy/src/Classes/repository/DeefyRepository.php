@@ -49,7 +49,7 @@ class DeefyRepository
 
     public function saveEmptyPlaylist(Playlist $playlist) : object
     {
-        //ajout de la la playlist dans la table playlist
+        //ajout de la playlist dans la table playlist
         if (is_null($playlist)) {
             throw new \InvalidArgumentException("L'objet playlist est null.");
         }
@@ -66,7 +66,7 @@ class DeefyRepository
 
         //ajout du lien entre le user et l'id de la playlist
         $prepare = $this->db->prepare("INSERT INTO user2playlist (id_user,id_pl) VALUES (?,?)");
-        $prepare->bindValue(1, $_SESSION["id"]);
+        $prepare->bindValue(1, $_SESSION["user"]["id"]);
         $prepare->bindValue(2, $newId);
         $prepare->execute();
 
@@ -81,7 +81,8 @@ class DeefyRepository
         //else
     }
 
-    public function savePodcastTrack(PodcastTrack $track):object{
+    public function savePodcastTrack(PodcastTrack $track): false|string
+    {
         if(!is_null($track)){
             $sql = $this->db->prepare("INSERT INTO track (
                 titre, 
@@ -119,7 +120,8 @@ class DeefyRepository
 
         $sqlSelect->execute([':id' => $newId]);
 
-        return $sqlSelect->fetch(PDO::FETCH_OBJ);
+        //return $sqlSelect->fetch(PDO::FETCH_OBJ);
+        return $newId;
 
     }
 
@@ -160,7 +162,8 @@ class DeefyRepository
         return $sql->fetchAll(PDO::FETCH_OBJ);
     }
 
-    public function findUser(string $email):object{
+    public function findUser(string $email)
+    :object{
 
         $sql = $this->db->prepare("SELECT * FROM user WHERE email = :email;");
         $sql->execute([':email' => $email]);

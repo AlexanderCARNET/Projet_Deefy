@@ -21,7 +21,7 @@ class AddPlaylistAction extends Action
                 inner join playlist on user2playlist.id_pl = playlist.id
                 where nom = ? and user2playlist.id_user = ?");
                 $prepared->bindParam(1,$titre);
-                $prepared->bindParam(2,$_SESSION["id"]);
+                $prepared->bindParam(2,$_SESSION["user"]["id"]);
                 $prepared->execute();
                 if(!$prepared->fetch()){
                     //elle n'existe pas, on la crée
