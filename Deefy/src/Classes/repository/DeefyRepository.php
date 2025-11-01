@@ -43,6 +43,7 @@ class DeefyRepository
 
     public function saveEmptyPlaylist(Playlist $playlist) : object
     {
+        //ajout de la la playlist dans la table playlist
         if (is_null($playlist)) {
             throw new \InvalidArgumentException("L'objet playlist est null.");
         }
@@ -56,6 +57,13 @@ class DeefyRepository
         $sqlSelect = $this->db->prepare("SELECT * FROM playlist WHERE id = :id");
 
         $sqlSelect->execute([':id' => $newId]);
+
+        //ajout du lien entre le user et l'id de la playlist
+        $prepare = $this->db->prepare("INSERT INTO user2playlist (id_user,id_pl) VALUES (?,?)");
+        $prepare->bindValue(1, $_SESSION["id"]);
+        $prepare->bindValue(2, $newId);
+        $prepare->execute();
+
 
         return $sqlSelect->fetch(PDO::FETCH_OBJ);
     }
