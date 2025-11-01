@@ -40,12 +40,6 @@ class DeefyRepository
         return self::$instance;
     }
 
-    public function recupererPlaylist(int $id):array{
-        $sql = $this->db->prepare("SELECT * FROM playlist WHERE id = :id;");
-        $sql -> bindParam(':id', $id, PDO::PARAM_INT);
-        $sql->execute();
-        return $sql->fetchAll(PDO::FETCH_OBJ);
-    }
 
     public function saveEmptyPlaylist(Playlist $playlist) : object
     {
@@ -74,12 +68,6 @@ class DeefyRepository
         return $sqlSelect->fetch(PDO::FETCH_OBJ);
     }
 
-    public function sauvegarderAudio(AudioTrack $track){
-        if($track instanceof AlbumTrack){
-            $sql = $this->db->prepare("insert into track (titre, genre, duree, filename, type, artiste_album, annee_album, numero_album) values ({$track->__get('titre')}, {$$track->__get('genre')}, {$track->__get('duree')}, {$track->__get('nom_fichier_audio')}, 'A', {$track->__get('artiste_album')}, {$track->__get('annee')}, {$track->__get('nb_piste')});");
-        }
-        //else
-    }
 
     public function savePodcastTrack(PodcastTrack $track): false|string
     {
@@ -223,5 +211,29 @@ class DeefyRepository
             return $sql->fetch(PDO::FETCH_OBJ)->role;
         }
         return 0;
+    }
+
+    /**
+     * Fonction qui donne toutes les playlists de l'utilisateur, l'utilisateur sera trouvé avec son email et son identifiant passés en paramètre.
+     * Elle renverra un tableau de playlists.
+     *
+     * @param int $idUser
+     * @param string $email
+     * @return array|null
+     * @throws \Exception
+     */
+    public function findAllUserPlaylists(int $idUser, string $email):?array{
+        $sql = $this->db->prepare("select up.id_pl from user u inner join user2playlist up on up.id_user=u.id where u.id = :idUser and u.email = :email;");
+        $sql->execute([':idUser' => $idUser, ':email' => $email]);
+
+        //Vérifie s'il contient quelque chose à l'intérieur, sinon il retourne null
+        if($sql->rowCount() > 0){
+            $playlists = [];
+            while($allPlaylist = $sql->fetch(PDO::FETCH_OBJ)){
+                $playlists[] = $this->findPlayById($allPlaylist->id_pl);
+            }
+            return $playlists;
+        }
+        return null;
     }
 }

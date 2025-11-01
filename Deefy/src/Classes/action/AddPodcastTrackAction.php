@@ -4,7 +4,6 @@ namespace iutnc\deefy\action;
 
 use DateTime;
 use iutnc\deefy\audio\lists\Playlist;
-use iutnc\deefy\audio\tracks\AudioTrack;
 use iutnc\deefy\audio\tracks\PodcastTrack;
 use iutnc\deefy\repository\DeefyRepository;
 use PDO;
