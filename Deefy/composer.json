@@ -5,7 +5,7 @@
 
   "autoload": {
     "psr-4": {
-        "iutnc\\deefy\\" : "./src/classes/"
+        "iutnc\\deefy\\" : "./src/Classes/"
     }
   },
   "require": {

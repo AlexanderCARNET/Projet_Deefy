@@ -16,8 +16,6 @@ class AddPodcastTrackAction extends Action
     public function execute() : string{
         if($_SERVER["REQUEST_METHOD"] === "POST"){
             if(!empty($_POST["nom"]) && !empty($_FILES["track"]) && !empty($_POST['auteur_podcast']) && !empty($_POST['date_podcast'])){
-                echo "hello";
-
                 $this->titre=$_POST["nom"];
 
                 if(isset($_SESSION["playlist_{$this->titre}"])){
