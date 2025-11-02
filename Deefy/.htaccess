@@ -1,0 +1,15 @@
+RewriteEngine On
+#
+# RewriteBase indispensable sur webetu :
+# à adapter à votre
+RewriteBase /www/e67005u/web/annee2/Deefy
+
+
+#
+# Pour interdire l'accès aux répertoires contenant du code
+RewriteRule ^sql(/.*|)$ - [NC,F]   # interdit l'accès à deefy/sql
+RewriteRule ^getID3(/.*|)$ - [NC,F]   # interdit l'accès à deefy/getID3
+RewriteRule ^vendor(/.*|)$ - [NC,F]   # interdit l'accès à deefy/vendor
+RewriteRule ^config(/.*|)$ - [NC,F]   # interdit l'accès à deefy/config
+RewriteRule ^src(/.*|)$ - [NC,F]   # interdit l'accès à deefy/src (il ne doit pas contenir index.php
+RewriteRule \.ini$ - [NC,F]   # interdit l'accès à tous les fichiers .ini
