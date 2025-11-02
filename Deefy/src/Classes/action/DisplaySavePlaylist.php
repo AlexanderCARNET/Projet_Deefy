@@ -83,7 +83,7 @@ class DisplaySavePlaylist extends Action
         $playlists = $rep->findAllPlaylistShared($user['id'], $user['email']);
         $res.='<h2>User shared Playlist</h2>';
         if(empty($playlists)){
-            $res.="<h2>Vous ne possédez pas encore de Playlists partagees avec vous</h2>";
+            $res.="<p>Vous ne possédez pas encore de Playlists partagees avec vous</p>";
         }
         else{
             foreach($playlists as $playlist){

@@ -73,11 +73,12 @@ class Dispatcher
                     $action = new DefaultAction();
                     break;
             }
-            try{
-                $html = $action->execute();
-            }catch (\Exception){
-                $this->renderPage("<p>Une erreur est survenue veuillez recommencer </p>");
-            }
+            $html = $action->execute();
+//            try{
+//                $html = $action->execute();
+//            }catch (\Exception){
+//                $this->renderPage("<p>Une erreur est survenue veuillez recommencer </p>");
+//            }
 
         //}
         $this->renderPage($html);
