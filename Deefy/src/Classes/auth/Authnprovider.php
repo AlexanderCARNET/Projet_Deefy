@@ -71,6 +71,9 @@ class Authnprovider
         if(isset($_SESSION['playlist'])){
             unset($_SESSION['playlist']);
         }
+        if(isset($_SESSION['pos'])){
+            unset($_SESSION['pos']);
+        }
     }
 
     public static function getSignedInUser():mixed{

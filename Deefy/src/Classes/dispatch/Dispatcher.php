@@ -61,6 +61,9 @@ class Dispatcher
                 case 'session-playlist':
                     $action = new DisplayPlaylistSession();
                     break;
+                case 'lecteur-playlist':
+                    $action = new LecteurPlaylist();
+                    break;
                 default:
                     $action = new DefaultAction();
                     break;
@@ -99,6 +102,7 @@ class Dispatcher
                 <a href="?action=add-playlist">Créer une playlist</a> |
                 <a href="?action=user-playlist">Mes playlists</a>|
                 <a href="?action=session-playlist">Afficher playlist selectionnée</a>
+                <a href="?action=lecteur-playlist">Lecteur playlist</a>
             </nava>
             <main>'.$html.
             '</main>
