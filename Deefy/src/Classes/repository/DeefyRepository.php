@@ -23,7 +23,7 @@ class DeefyRepository
         try{
             $dsn = "mysql:host=" . self::$config['host'] . ";dbname=" . self::$config['dbname'];
             $this->db = new PDO($dsn, self::$config['user'], self::$config['password']);
-            echo "Connected successfully!!!";
+            //echo "Connected successfully!!!";
         }
         catch (PDOException $e){
             echo "Connection failed: " . $e->getMessage();
@@ -192,7 +192,9 @@ class DeefyRepository
     public function findPlayById(int $idPlaylist): ?Playlist{
         $sql = $this->db->prepare("SELECT * FROM playlist p inner join playlist2track pt on pt.id_pl=p.id inner join track t on t.id=pt.id_track WHERE p.id = :idPlaylist;");
         $sql->execute([':idPlaylist' => $idPlaylist]);
-        if($sql->rowCount() > 0){
+        $existe = $this->db->prepare("SELECT id, nom FROM playlist WHERE id = :idPlaylist;");
+        $existe->execute([':idPlaylist' => $idPlaylist]);
+        if($existe->rowCount() > 0){
             $tracks = [];
             while($allPlaylist = $sql->fetch(PDO::FETCH_OBJ)){
                 if($allPlaylist->type === 'P'){
@@ -201,9 +203,8 @@ class DeefyRepository
                 else{
                     $tracks[] = new AlbumTrack($allPlaylist->titre, $allPlaylist->genre, $allPlaylist->duree, new DateTime('01/01/1970'), $allPlaylist->filename, $allPlaylist->artiste_album, $allPlaylist->titre_album, $allPlaylist->annee_album, $allPlaylist->numero_album);
                 }
-                $nomPlaylist = $allPlaylist->nom;
             }
-            $playlist = new Playlist($nomPlaylist, $tracks);
+            $playlist = new Playlist($existe->fetch()["nom"], $tracks);
             return $playlist;
         }
         return null;
