@@ -57,6 +57,9 @@ class DisplaySavePlaylist extends Action
         $rep = DeefyRepository::getInstance();
         $playlists = $rep->findAllUserPlaylists($user['id'], $user['email']);
         $res="<h2>User Playlist</h2><form method='post'>";
+        if(empty($playlists)){
+            return "<h2>Vous ne possédez pas encore de Playlists</h2>";
+        }
         foreach($playlists as $playlist){
             $res.= "<li><button type='submit' name='playlist' value='".$playlist->__get('nom')."'>".$playlist->__get('nom')."</button></li>";
         }
