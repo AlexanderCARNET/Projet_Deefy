@@ -40,11 +40,11 @@ class AddPodcastTrackAction extends Action
 
                 //enregistrement du fichier audio
                 $nouvNom = uniqid("audio_") . ".mp3";
-                $chemin = "./src/classes/audio/" . $nouvNom;
+                $chemin = "src/Classes/audio/" . $nouvNom;
                 move_uploaded_file($_FILES['monAudio']['tmp_name'],$chemin);
 
                 //creation de track
-                $podcastTrack = new PodcastTrack("", "", "", 0, "", $chemin, $auteur_pod, $date);
+                $podcastTrack = new PodcastTrack("", "", "", 0, $date, $chemin, $auteur_pod, $date);
                 //ajout dans la playlist qui est en session
                 $playlist = $_SESSION['playlist'];
                 $playlist->addAudio($podcastTrack);
