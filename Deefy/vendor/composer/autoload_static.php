@@ -16,7 +16,7 @@ class ComposerStaticInita5c0a2e9d02f9ad86d0e8f6cdc2e5d1e
     public static $prefixDirsPsr4 = array (
         'iutnc\\deefy\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/src/classes',
+            0 => __DIR__ . '/../..' . '/src/Classes',
         ),
     );
 

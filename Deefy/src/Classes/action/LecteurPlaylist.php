@@ -47,6 +47,9 @@ class LecteurPlaylist extends Action
 
             $_SESSION['pos']=$pos;
             $piste = $playlist->__get('pistes');
+            if(empty($piste)){
+                return "<h2>Pas de pistes dans la playlist {$playlist->nom}.</h2>";
+            }
             $file = $piste[$pos]->__get('nom_fichier_audio');
             return (new AudioListRenderer($playlist))->render(0).(new AudioTrackRenderer($piste[$pos]))->render(1).$this->form($file);
         }

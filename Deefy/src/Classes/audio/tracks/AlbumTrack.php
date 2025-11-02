@@ -8,7 +8,7 @@ use iutnc\deefy\audio\tracks\AudioTrack as AudioTrack;
 use iutnc\deefy\exception\InvalidPropertyNameException as InvalidName;
 
 
-require_once "getID3/getID3/getid3.php";
+require_once __DIR__ . "/../../../../getID3/getid3/getid3.php";
 
 class AlbumTrack extends AudioTrack {
 

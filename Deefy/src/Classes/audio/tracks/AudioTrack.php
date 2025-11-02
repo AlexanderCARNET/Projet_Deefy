@@ -6,7 +6,7 @@ use DateTime;
 use iutnc\deefy\exception\InvalidPropertyValueException as InvalidValue;
 use iutnc\deefy\exception\InvalidPropertyNameException as InvalidName;
 
-require_once "getID3/getID3/getid3.php";
+require_once "getID3/getid3/getid3.php";
 
 
 abstract class AudioTrack{
