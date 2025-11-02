@@ -12,6 +12,8 @@ use iutnc\deefy\action\DisplayPlaylistAction;
 use iutnc\deefy\action\DisplayPlaylistIdAction;
 use iutnc\deefy\action\DisplayPlaylistSession;
 use iutnc\deefy\action\DisplaySavePlaylist;
+use iutnc\deefy\action\LecteurPlaylist;
+use iutnc\deefy\action\SharePlaylist2User;
 use iutnc\deefy\auth\Authnprovider;
 use iutnc\deefy\action\LecteurPlaylist;
 
@@ -65,6 +67,9 @@ class Dispatcher
                 case 'lecteur-playlist':
                     $action = new LecteurPlaylist();
                     break;
+                case 'share-playlist':
+                    $action = new SharePlaylist2User();
+                    break;
                 default:
                     $action = new DefaultAction();
                     break;
@@ -102,8 +107,9 @@ class Dispatcher
                 <a href="?action=default">Accueil</a> | 
                 <a href="?action=add-playlist">Créer une playlist</a> |
                 <a href="?action=user-playlist">Mes playlists</a>|
-                <a href="?action=session-playlist">Afficher playlist selectionnée</a>
-                <a href="?action=lecteur-playlist">Lecteur playlist</a>
+                <a href="?action=session-playlist">Afficher playlist selectionnée</a>   |
+                <a href="?action=lecteur-playlist">Lecteur playlist</a> |
+                <a href="?action=share-playlist">Partager la playlist</a>
             </nava>
             <main>'.$html.
             '</main>

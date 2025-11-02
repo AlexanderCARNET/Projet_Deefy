@@ -7,6 +7,7 @@ use iutnc\deefy\audio\lists\Playlist;
 use iutnc\deefy\audio\tracks\AlbumTrack;
 use iutnc\deefy\audio\tracks\AudioTrack;
 use iutnc\deefy\audio\tracks\PodcastTrack;
+use iutnc\deefy\auth\Authnprovider;
 use iutnc\deefy\exception\AuthnException;
 use \PDO;
 use PDOException;
@@ -173,6 +174,14 @@ class DeefyRepository
         return 0;
     }
 
+    /**
+     * Fonction qui sert à enregistrer l'e-mail et le mot de passe dans la base de données
+     *
+     * @param string $email
+     * @param string $password
+     * @return void
+     * @throws AuthnException
+     */
     public function saveEmailPassword(string $email, string $password){
         $sql = $this->db->prepare("SELECT count(email) as nb FROM user WHERE email = :email;");
         $sql->execute([':email' => $email]);
@@ -187,6 +196,10 @@ class DeefyRepository
     }
 
     /**
+     * Fonction qui retourne une playlist en utilisant uniquement son ID
+     *
+     * @param int $idPlaylist
+     * @return Playlist|null
      * @throws \Exception
      */
     public function findPlayById(int $idPlaylist): ?Playlist{
@@ -210,6 +223,13 @@ class DeefyRepository
         return null;
     }
 
+    /**
+     * Fonction qui vérifie si l'utilisateur est le propriétaire de la playlist ou non
+     *
+     * @param int $id
+     * @param int $idPlaylist
+     * @return int
+     */
     public function checkOwnerShipPlaylist(int $id, int $idPlaylist):int{
         $sql = $this->db->prepare("SELECT u.role FROM user u inner join user2playlist up on up.id_user=u.id WHERE u.id = :id and up.id_pl = :idPlaylist;");
         $sql->execute([':id' => $id, ':idPlaylist' => $idPlaylist]);
@@ -230,6 +250,110 @@ class DeefyRepository
      */
     public function findAllUserPlaylists(int $idUser, string $email):?array{
         $sql = $this->db->prepare("select up.id_pl from user u inner join user2playlist up on up.id_user=u.id where u.id = :idUser and u.email = :email;");
+        $sql->execute([':idUser' => $idUser, ':email' => $email]);
+
+        //Vérifie s'il contient quelque chose à l'intérieur, sinon il retourne null
+        if($sql->rowCount() > 0){
+            $playlists = [];
+            while($allPlaylist = $sql->fetch(PDO::FETCH_OBJ)){
+                $playlists[] = $this->findPlayById($allPlaylist->id_pl);
+            }
+            return $playlists;
+        }
+        return null;
+    }
+
+    /**
+     * Fonction qui affiche toutes les playlists avec leurs identifiants
+     *
+     * @param int $idUser
+     * @param string $email
+     * @return array|null
+     */
+    public function findAllUserIdPlaylists(int $idUser, string $email):?array{
+        $sql = $this->db->prepare("select up.id_pl, p.nom from user u inner join user2playlist up on up.id_user=u.id inner join playlist p on p.id=up.id_pl where u.id = :idUser and u.email = :email;");
+        $sql->execute([':idUser' => $idUser, ':email' => $email]);
+
+        //Vérifie s'il contient quelque chose à l'intérieur, sinon il retourne null
+        if($sql->rowCount() > 0){
+            return $sql->fetchAll(PDO::FETCH_OBJ);
+        }
+        return null;
+    }
+
+    /**
+     * Fonction qui enregistre dans la base de données la playlist, la personne avec qui elle a été partagée et le rôle
+     *
+     * @param int $idPlaylist
+     * @param string $email
+     * @param int $role
+     * @return void
+     * @throws AuthnException
+     */
+    public function sharePlaylist(int $idPlaylist, string $email, int $role): void
+    {
+        try{
+            $user = $this->findUser($email);
+        }catch (AuthnException $ex){
+            throw new AuthnException($ex->getMessage());
+        }
+
+        $playlist = $this->findPlayById($idPlaylist);
+
+        if ($playlist != null) {
+            if ($role == 2 || $role == 3) {
+                $sql = $this->db->prepare("INSERT INTO shareplaylist (id_user, id_pl, role) VALUES (:idUser, :idPlaylist, :role);");
+                $params = [
+                    ':idUser' => $user->id,
+                    ':idPlaylist' => $idPlaylist,
+                    ':role' => $role
+                ];
+
+                try {
+                    $sql->execute($params);
+                    echo "Insertion réussie!";
+                } catch (PDOException $e) {
+                    if ($e->getCode() == 23000) {
+                        throw new AuthnException("Cette playlist est déjà partagée avec cet utilisateur.");
+                    } else {
+                        throw $e;
+                    }
+                }
+
+            } else {
+                throw new \Exception("Rôle non valide");
+            }
+        } else {
+            throw new AuthnException("La playlist n'existe pas.");
+        }
+    }
+
+    /**
+     * Fonction qui permet de savoir quels droits l'utilisateur a sur la playlist partagée
+     *
+     * @param int $idUser
+     * @param string $nomPlaylist
+     * @return int
+     */
+    public function checkSharePermissions(int $idUser, string $nomPlaylist):int{
+        $sql = $this->db->prepare("SELECT sp.role FROM sharePlaylist sp inner join playlist p on p.id=sp.id_pl WHERE id_user = :user and p.nom = :nomPlaylist;");
+        $sql->execute([':user' => $idUser, ':nomPlaylist' => $nomPlaylist]);
+        if($sql->rowCount() > 0){
+            return $sql->fetch(PDO::FETCH_OBJ)->role;
+        }
+        return 0;
+    }
+
+    /**
+     * Il fonctionne en donnant toutes les playlists partagées avec l'utilisateur passé en paramètre
+     *
+     * @param int $idUser
+     * @param string $email
+     * @return array|null
+     * @throws \Exception
+     */
+    public function findAllPlaylistShared(int $idUser, string $email):?array{
+        $sql = $this->db->prepare("select sp.id_pl from user u inner join sharePlaylist sp on sp.id_user=u.id where u.id = :idUser and u.email = :email;");
         $sql->execute([':idUser' => $idUser, ':email' => $email]);
 
         //Vérifie s'il contient quelque chose à l'intérieur, sinon il retourne null

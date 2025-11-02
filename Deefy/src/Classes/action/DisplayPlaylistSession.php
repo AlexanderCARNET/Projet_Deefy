@@ -3,7 +3,10 @@
 namespace iutnc\deefy\action;
 
 use iutnc\deefy\audio\lists\Playlist;
+use iutnc\deefy\auth\Authnprovider;
+use iutnc\deefy\exception\AuthnException;
 use iutnc\deefy\renderer\AudioListRenderer;
+use iutnc\deefy\repository\DeefyRepository;
 
 /**
  * Classe qui affiche la playlist enregistrée dans une session
@@ -39,12 +42,18 @@ class DisplayPlaylistSession extends Action
      * @return string
      */
     public function form():string{
-        return <<<HTML
-            <form method="POST">
-                <button type="submit" name="add-track"><a href="?action=add-track">Ajouter Une piste</a></button><br><br>
-                <button type="submit" name="delete">Désélectionnée la playlist</button>
-            </form>
-        HTML;
-
+        $res = '
+            <form method="POST">';
+        $rep = DeefyRepository::getInstance();
+        try {
+            $user = Authnprovider::getSignedInUser();
+        }catch (AuthnException $ex){
+            return "<h2>".$ex->getMessage()."</h2>";
+        }
+        //Je vérifie si j'ai les permissions pour la modifier ou non
+        if($rep->checkSharePermissions($user['id'], $_SESSION['playlist']->__get('nom')) == 2 || $rep->checkSharePermissions($user['id'], $_SESSION['playlist']->__get('nom')) == 0){
+            $res.='<button type="submit" name="add-track"><a href="?action=add-track">Ajouter Une piste</a></button><br><br>';
+        }
+        return $res.'<button type="submit" name="delete">Désélectionnée la playlist</button></form>';
     }
 }
