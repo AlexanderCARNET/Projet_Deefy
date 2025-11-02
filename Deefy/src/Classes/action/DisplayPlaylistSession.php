@@ -24,6 +24,7 @@ class DisplayPlaylistSession extends Action
                 //Je vérifie si le bouton a été appuyé
                 if(isset($_POST['delete'])){
                     unset($_SESSION['playlist']);
+                    unset($_SESSION['pos']);
                     return "<h2>Playlist supprimée</h2>";
                 }
             }
