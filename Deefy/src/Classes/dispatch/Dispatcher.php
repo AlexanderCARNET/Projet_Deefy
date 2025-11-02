@@ -12,6 +12,7 @@ use iutnc\deefy\action\DisplayPlaylistAction;
 use iutnc\deefy\action\DisplayPlaylistIdAction;
 use iutnc\deefy\action\DisplayPlaylistSession;
 use iutnc\deefy\action\DisplaySavePlaylist;
+use iutnc\deefy\action\LecteurPlaylist;
 use iutnc\deefy\auth\Authnprovider;
 
 class Dispatcher
@@ -59,6 +60,9 @@ class Dispatcher
                 case 'session-playlist':
                     $action = new DisplayPlaylistSession();
                     break;
+                case 'lecteur-playlist':
+                    $action = new LecteurPlaylist();
+                    break;
                 default:
                     $action = new DefaultAction();
                     break;
@@ -95,7 +99,8 @@ class Dispatcher
                 <a href="?action=add-track">Ajouter un track</a>    |   
                 <a href="?action=display-playlist">Recuperer une playlist par ID</a>    |   
                 <a href="?action=user-playlist">Afficher les playlist de User</a>   |
-                <a href="?action=session-playlist">Afficher playlist en session</a>
+                <a href="?action=session-playlist">Afficher playlist en session</a> |
+                <a href="?action=lecteur-playlist">Lecteur playlist</a>
             </nava>
             <main>'.$html.
             '</main>
