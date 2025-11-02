@@ -81,11 +81,11 @@ class AddPodcastTrackAction extends Action
                 <label for="artiste">Artiste track : </label>
                 <input type="text" name="artiste" id="artiste"> <br>  
                 <label for="date">Date track : </label>
-                <input type="date" name="date" id="date"> <br> 
+                <input type="date" name="date" id="date" value="01/01/1970"> <br> 
                 <label for="genre">Genre track : </label>
                 <input type="text" name="genre" id="genre"> <br>
                 <label for="duree">Duree track : </label>
-                <input type="number" name="duree" id="duree"> <br> 
+                <input type="number" name="duree" id="duree" value="0"  > <br> 
                 <label for="genre">Auteur podcast : </label>
                 <input type="text" name="auteur_pod" id="auteur_pod"> <br>
             </li>
