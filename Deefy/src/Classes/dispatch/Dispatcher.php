@@ -46,10 +46,12 @@ class Dispatcher
                 case 'logOut':
                     try{
                         Authnprovider::logout();
+                        $action = new DefaultAction();
                     }
                     catch(\Exception $e){
                         //
                     }
+                    break;
                 case 'display-playlist':
                     $action = new DisplayPlaylistIdAction();
                     break;
@@ -63,8 +65,12 @@ class Dispatcher
                     $action = new DefaultAction();
                     break;
             }
+            try{
+                $html = $action->execute();
+            }catch (\Exception){
+                $this->renderPage("<p>Une erreur est survenue veuillez recommencer </p>");
+            }
 
-            $html = $action->execute();
         //}
         $this->renderPage($html);
     }
@@ -79,7 +85,7 @@ class Dispatcher
         </head>
         <body>
             <nav>
-                <a href="?action=add-user">Inscription</a>';
+                <a href="?action=add-user">Inscription</a><u> | </u>';
         if(isset($_SESSION['user'])){
             $res .= '<a href="?action=logOut">Log out</a>';
         }
@@ -90,12 +96,9 @@ class Dispatcher
             <header><h1>Deefy - Application</h1></header>
             <nava>
                 <a href="?action=default">Accueil</a> | 
-                <a href="?action=playlist">Playlist</a> | 
-                <a href="?action=add-playlist">Creer ou ajouter un playlist</a> |    
-                <a href="?action=add-track">Ajouter un track</a>    |   
-                <a href="?action=display-playlist">Recuperer une playlist par ID</a>    |   
-                <a href="?action=user-playlist">Afficher les playlist de User</a>   |
-                <a href="?action=session-playlist">Afficher playlist en session</a>
+                <a href="?action=add-playlist">Créer une playlist</a> |
+                <a href="?action=user-playlist">Mes playlists</a>|
+                <a href="?action=session-playlist">Afficher playlist selectionnée</a>
             </nava>
             <main>'.$html.
             '</main>

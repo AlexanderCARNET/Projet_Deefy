@@ -24,7 +24,7 @@ class DisplayPlaylistSession extends Action
                 //Je vérifie si le bouton a été appuyé
                 if(isset($_POST['delete'])){
                     unset($_SESSION['playlist']);
-                    return "<h2>Playlist supprimée</h2>";
+                    return "<h2>Playlist Désélectionnée</h2>";
                 }
             }
             return $render->render(0).$this->form();
@@ -40,7 +40,8 @@ class DisplayPlaylistSession extends Action
     public function form():string{
         return <<<HTML
             <form method="POST">
-                <button type="submit" name="delete">Supprime</button>
+                <button type="submit" name="add-track"><a href="?action=add-track">Ajouter Une piste</a></button><br><br>
+                <button type="submit" name="delete">Désélectionnée la playlist</button>
             </form>
         HTML;
 

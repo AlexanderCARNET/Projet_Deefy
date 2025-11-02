@@ -36,7 +36,7 @@ class Authnprovider
             $hash = password_hash($password, PASSWORD_DEFAULT, ['cost' => 12]);
         }
         else{
-            throw new AuthnException("Author error: invalid password.");
+            throw new AuthnException("Mot de passe trop faible.");
         }
         $repo=DeefyRepository::getInstance();
         $repo->saveEmailPassword($email, $hash);

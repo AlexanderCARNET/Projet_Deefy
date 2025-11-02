@@ -3,6 +3,7 @@
 namespace iutnc\deefy\action;
 
 use iutnc\deefy\audio\lists\Playlist;
+use iutnc\deefy\auth\Authnprovider;
 use iutnc\deefy\renderer\AudioListRenderer;
 use iutnc\deefy\repository\DeefyRepository;
 use PDO;
@@ -12,6 +13,13 @@ class AddPlaylistAction extends Action
 
     public function execute(): string
     {
+        //verifier qu'un utilisateur est connecté
+        try{
+            Authnprovider::getSignedInUser();
+        }catch (\Exception){
+            return "<p>Veuillez vous connecter</p>";
+        }
+
         if(isset($_SERVER['REQUEST_METHOD'])=="POST"){
             if(!empty($_POST["titre"])){
                 $titre = filter_var($_POST["titre"], FILTER_SANITIZE_SPECIAL_CHARS);

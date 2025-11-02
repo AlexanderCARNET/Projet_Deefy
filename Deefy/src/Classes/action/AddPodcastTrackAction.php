@@ -20,22 +20,22 @@ class AddPodcastTrackAction extends Action
         if($_SERVER["REQUEST_METHOD"] === "POST"){
             if(true){//verifier que tout les champs sont remplies
                 //recuperer les données du formulaire
-                $titre = filter_var($_POST["titre"],FILTER_SANITIZE_SPECIAL_CHARS);
-                $artist = filter_var($_POST["artiste"],FILTER_SANITIZE_SPECIAL_CHARS);
+//                $titre = filter_var($_POST["titre"],FILTER_SANITIZE_SPECIAL_CHARS);
+//                $artist = filter_var($_POST["artiste"],FILTER_SANITIZE_SPECIAL_CHARS);
                 $date = filter_var($_POST["date"],FILTER_SANITIZE_SPECIAL_CHARS);
-                $genre = filter_var($_POST["genre"],FILTER_SANITIZE_SPECIAL_CHARS);
-                $duree = filter_var($_POST["duree"],FILTER_SANITIZE_NUMBER_INT);
+//                $genre = filter_var($_POST["genre"],FILTER_SANITIZE_SPECIAL_CHARS);
+//                $duree = filter_var($_POST["duree"],FILTER_SANITIZE_NUMBER_INT);
                 $auteur_pod = filter_var($_POST["auteur_pod"],FILTER_SANITIZE_SPECIAL_CHARS);
 
                 //recuperation du fichier audio
                 if(!is_uploaded_file($_FILES['monAudio']['tmp_name'])){
-                    return "erreur non uploader correctement";
+                    return "<p>erreur, fichier non uploader correctement. Veuillez réessayer</p><button><a href='?action=add-track'>Réessayer</a></button>";
                 }
                 if(substr($_FILES['monAudio']['name'],-4) !== '.mp3'){
-                    return "<p>Mauvaise nom de fichier</p>";
+                    return "<p>Mauvaise extension (uniquement .mp3 est accépté.)</p><button><a href='?action=add-track'>Réessayer</a></button>";
                 }
                 if($_FILES['monAudio']['type'] !== 'audio/mpeg'){
-                    return "<p>Mauvaise type de fichier</p>";
+                    return "<p>Mauvaise type de fichier</p><button><a href='?action=add-track'>Réessayer</a></button>";
                 }
 
                 //enregistrement du fichier audio
@@ -44,7 +44,7 @@ class AddPodcastTrackAction extends Action
                 move_uploaded_file($_FILES['monAudio']['tmp_name'],$chemin);
 
                 //creation de track
-                $podcastTrack = new PodcastTrack($titre, $artist, $genre, $duree, $date, $chemin, $auteur_pod, $date);
+                $podcastTrack = new PodcastTrack("", "", "", 0, "", $chemin, $auteur_pod, $date);
                 //ajout dans la playlist qui est en session
                 $playlist = $_SESSION['playlist'];
                 $playlist->addAudio($podcastTrack);
@@ -75,22 +75,24 @@ class AddPodcastTrackAction extends Action
         return <<<HTML
         <h2>Ajouter une PodcastTrack dans une playlist</h2>
         <form enctype="multipart/form-data" method="POST">
-            <li>
-                <label for="titre">Titre track : </label>
-                <input type="text" name="titre" id="titre"> <br>
-                <label for="artiste">Artiste track : </label>
-                <input type="text" name="artiste" id="artiste"> <br>  
-                <label for="date">Date track : </label>
-                <input type="date" name="date" id="date"> <br> 
-                <label for="genre">Genre track : </label>
-                <input type="text" name="genre" id="genre"> <br>
-                <label for="duree">Duree track : </label>
-                <input type="number" name="duree" id="duree"> <br> 
-                <label for="genre">Auteur podcast : </label>
-                <input type="text" name="auteur_pod" id="auteur_pod"> <br>
-            </li>
+                    <li>
+        <!--                        <label for="titre">Titre track : </label>-->
+        <!--                        <input type="text" name="titre" id="titre"> <br>-->
+        <!--                        <label for="artiste">Artiste track : </label>-->
+        <!--                        <input type="text" name="artiste" id="artiste"> <br>  -->
+        <!--                        <label for="date">Date track : </label>-->
+        <!--                        <input type="date" name="date" id="date"> <br> -->
+        <!--                        <label for="genre">Genre track : </label>-->
+        <!--                        <input type="text" name="genre" id="genre"> <br>-->
+        <!--                        <label for="duree">Duree track : </label>-->
+        <!--                        <input type="number" name="duree" id="duree"> <br> -->
+                        <label for="date">Date Podcast : </label>
+                        <input type="date" name="date" id="date" required> <br>
+                        <label for="genre">Auteur podcast : </label>
+                        <input type="text" name="auteur_pod" id="auteur_pod" required> <br>
+                    </li>
             <label for="track">File track : </label>
-            <input type="file" name="monAudio" id="monAudio" accept="mp3">
+            <input type="file" name="monAudio" id="monAudio" accept="mp3" required>
             <br>
             <br>
             <button type="submit">Ajouter</button>
