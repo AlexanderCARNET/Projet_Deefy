@@ -51,7 +51,7 @@ class LecteurPlaylist extends Action
                 return "<h2>Pas de pistes dans la playlist {$playlist->nom}.</h2>";
             }
             $file = $piste[$pos]->__get('nom_fichier_audio');
-            return (new AudioListRenderer($playlist))->render(0).(new AudioTrackRenderer($piste[$pos]))->render(1).$this->form($file);
+            return "<br>".(new AudioTrackRenderer($piste[$pos]))->render(1).$this->form($file) . (new AudioListRenderer($playlist))->render(0);
         }
         return "<h2>Aucune playlist selectionnee</h2>";
     }
