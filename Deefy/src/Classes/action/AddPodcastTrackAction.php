@@ -2,8 +2,6 @@
 
 namespace iutnc\deefy\action;
 
-use DateTime;
-use iutnc\deefy\audio\lists\Playlist;
 use iutnc\deefy\audio\tracks\PodcastTrack;
 use iutnc\deefy\repository\DeefyRepository;
 use PDO;
@@ -22,7 +20,12 @@ class AddPodcastTrackAction extends Action
                 //recuperer les données du formulaire
                 $titre = filter_var($_POST["titre"],FILTER_SANITIZE_SPECIAL_CHARS);
                 $artist = filter_var($_POST["artiste"],FILTER_SANITIZE_SPECIAL_CHARS);
-                $date = filter_var($_POST["date"],FILTER_SANITIZE_SPECIAL_CHARS);
+                if(!empty(filter_var($_POST["date"], FILTER_SANITIZE_SPECIAL_CHARS))){
+                    $date = new \DateTime(filter_var($_POST["date"],FILTER_SANITIZE_SPECIAL_CHARS));
+                }
+                else{
+                    $date = new \DateTime('01/01/1970');
+                }
                 $genre = filter_var($_POST["genre"],FILTER_SANITIZE_SPECIAL_CHARS);
                 $duree = filter_var($_POST["duree"],FILTER_SANITIZE_NUMBER_INT);
                 $auteur_pod = filter_var($_POST["auteur_pod"],FILTER_SANITIZE_SPECIAL_CHARS);
@@ -81,7 +84,7 @@ class AddPodcastTrackAction extends Action
                 <label for="artiste">Artiste track : </label>
                 <input type="text" name="artiste" id="artiste"> <br>  
                 <label for="date">Date track : </label>
-                <input type="date" name="date" id="date" value="01/01/1970"> <br> 
+                <input type="date" name="date" id="date"> <br> 
                 <label for="genre">Genre track : </label>
                 <input type="text" name="genre" id="genre"> <br>
                 <label for="duree">Duree track : </label>
