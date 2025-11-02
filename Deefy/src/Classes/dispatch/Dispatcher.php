@@ -15,7 +15,6 @@ use iutnc\deefy\action\DisplaySavePlaylist;
 use iutnc\deefy\action\LecteurPlaylist;
 use iutnc\deefy\action\SharePlaylist2User;
 use iutnc\deefy\auth\Authnprovider;
-use iutnc\deefy\action\LecteurPlaylist;
 
 class Dispatcher
 {
