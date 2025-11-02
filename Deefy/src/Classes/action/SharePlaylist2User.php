@@ -34,6 +34,7 @@ class SharePlaylist2User extends Action
                 if(!empty($_POST['id_pl']) && !empty($_POST['email']) && !empty($_POST['role'])){
                     try {
                         $rep->sharePlaylist($_POST['id_pl'], $_POST['email'], $_POST['role']);
+                        $res .= "<h3>Partage réussi !</h3>";
                     }catch (AuthnException $ex){
                         return "<h2>".$ex->getMessage()."</h2>";
                     }
@@ -54,15 +55,15 @@ class SharePlaylist2User extends Action
             <form method="POST">
                 <li>
                     <label for="id_pl">ID playlist:</label>
-                    <input type="number" name="id_pl" id="id_pl">
+                    <input type="number" name="id_pl" id="id_pl" required>
                 </li>
                 <li>
                     <label for="email">Email:</label>
-                    <input type="text" name="email" id="email">
+                    <input type="text" name="email" id="email" required>
                 </li>
                 <li>
                     <label for="ok">Role:</label>
-                    <select name="role">
+                    <select name="role" required>
                         <option value="">--Role--</option>
                         <option value="2">Editor</option>
                         <option value="3">Reader</option>

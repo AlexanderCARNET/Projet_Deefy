@@ -301,7 +301,26 @@ class DeefyRepository
         $playlist = $this->findPlayById($idPlaylist);
 
         if ($playlist != null) {
-            if ($role == 2 || $role == 3) {
+            if ($role === 2 || $role === 3) {
+                //verif si on se la partage pas à soit meme
+                if(Authnprovider::getSignedInUser()["email"] === $email){
+                    throw new AuthnException("Cette playlist vous appartient déjà");
+                }
+
+                //verif que l'on est propriétaire de cette playlist
+                $sql = $this->db->prepare("select id_user from user2playlist where id_pl = ?");
+                $sql->bindValue(1, $idPlaylist);
+                $sql->execute();
+                if($sql->rowCount() >= 1){
+                    $id_createur_pl = $sql->fetch(PDO::FETCH_OBJ);
+                    echo $id_createur_pl->id_user ."---". Authnprovider::getSignedInUser()["id"];
+                    if($id_createur_pl->id_user != Authnprovider::getSignedInUser()["id"]){
+                        throw new AuthnException("Cette playlist ne vous appartient pas !");
+                    }
+                }
+
+
+                //insertion
                 $sql = $this->db->prepare("INSERT INTO shareplaylist (id_user, id_pl, role) VALUES (:idUser, :idPlaylist, :role);");
                 $params = [
                     ':idUser' => $user->id,
@@ -311,7 +330,7 @@ class DeefyRepository
 
                 try {
                     $sql->execute($params);
-                    echo "Insertion réussie!";
+                    //echo "Insertion réussie!";
                 } catch (PDOException $e) {
                     if ($e->getCode() == 23000) {
                         throw new AuthnException("Cette playlist est déjà partagée avec cet utilisateur.");
