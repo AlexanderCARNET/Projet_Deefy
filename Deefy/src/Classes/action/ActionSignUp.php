@@ -40,10 +40,10 @@ class ActionSignUp extends Action
                     </tr>
                 </thead>
                 <td>
-                    <input type="email" name="email" id="email">
+                    <input type="email" name="email" id="email" required>
                 </td>
                 <td>
-                    <input type="password" name="password" id="password">
+                    <input type="password" name="password" id="password" required>
                 </td>
             </table>
             <input type="submit" value="Create account">
