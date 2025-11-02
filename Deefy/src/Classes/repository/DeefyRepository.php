@@ -40,6 +40,12 @@ class DeefyRepository
         return self::$instance;
     }
 
+    public function recupererPlaylist(int $id):array{
+        $sql = $this->db->prepare("SELECT * FROM playlist WHERE id = :id;");
+        $sql -> bindParam(':id', $id, PDO::PARAM_INT);
+        $sql->execute();
+        return $sql->fetchAll(PDO::FETCH_OBJ);
+    }
 
     public function saveEmptyPlaylist(Playlist $playlist) : object
     {
@@ -67,7 +73,6 @@ class DeefyRepository
 
         return $sqlSelect->fetch(PDO::FETCH_OBJ);
     }
-
 
     public function savePodcastTrack(PodcastTrack $track): false|string
     {
