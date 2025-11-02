@@ -17,7 +17,7 @@ class AddPlaylistAction extends Action
         try{
             Authnprovider::getSignedInUser();
         }catch (\Exception){
-            return "<p>Veuillez vous connecter</p>";
+            return "<h2><strong>Veuillez vous connecter</strong></h2>";
         }
 
         if(isset($_SERVER['REQUEST_METHOD'])=="POST"){
