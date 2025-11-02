@@ -35,7 +35,7 @@ class DisplaySavePlaylist extends Action
                 if(!empty($_POST['playlist']))
                     if($playlist->__get('nom') == $_POST['playlist']){
                         $_SESSION['playlist'] = $playlist;
-                        return $this->form()."<h2>Playlist saved!!</h2>";
+                        return $this->form()."<h2>Playlist selected!!</h2>";
                     }
             }
         }
