@@ -4,6 +4,7 @@ namespace iutnc\deefy\action;
 
 use iutnc\deefy\audio\lists\Playlist;
 use iutnc\deefy\auth\Authnprovider;
+use iutnc\deefy\auth\Authz;
 use iutnc\deefy\renderer\AudioListRenderer;
 use iutnc\deefy\repository\DeefyRepository;
 use PDO;
@@ -25,11 +26,17 @@ class AddPlaylistAction extends Action
                 $titre = filter_var($_POST["titre"], FILTER_SANITIZE_SPECIAL_CHARS);
                 //verifier dans la bd que la playlist n'existe pas
                 $instance = DeefyRepository::getInstance();
-                $prepared = $instance->db->prepare("select nom from user2playlist 
+                if(Authz::checkRole(Authnprovider::getSignedInUser())=='admin'){
+                    $prepared = $instance->db->prepare("select nom from user2playlist 
+                    inner join playlist where nom = ?");
+                    $prepared->bindParam(1,$titre);
+                }else{
+                    $prepared = $instance->db->prepare("select nom from user2playlist 
                 inner join playlist on user2playlist.id_pl = playlist.id
                 where nom = ? and user2playlist.id_user = ?");
-                $prepared->bindParam(1,$titre);
-                $prepared->bindParam(2,$_SESSION["user"]["id"]);
+                    $prepared->bindParam(1,$titre);
+                    $prepared->bindParam(2,$_SESSION["user"]["id"]);
+                }
                 $prepared->execute();
                 if(!$prepared->fetch()){
                     //elle n'existe pas, on la crée
