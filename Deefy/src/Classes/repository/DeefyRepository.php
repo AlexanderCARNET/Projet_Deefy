@@ -8,6 +8,7 @@ use iutnc\deefy\audio\tracks\AlbumTrack;
 use iutnc\deefy\audio\tracks\AudioTrack;
 use iutnc\deefy\audio\tracks\PodcastTrack;
 use iutnc\deefy\auth\Authnprovider;
+use iutnc\deefy\auth\Authz;
 use iutnc\deefy\exception\AuthnException;
 use \PDO;
 use PDOException;
@@ -249,8 +250,15 @@ class DeefyRepository
      * @throws \Exception
      */
     public function findAllUserPlaylists(int $idUser, string $email):?array{
-        $sql = $this->db->prepare("select up.id_pl from user u inner join user2playlist up on up.id_user=u.id where u.id = :idUser and u.email = :email;");
-        $sql->execute([':idUser' => $idUser, ':email' => $email]);
+        $role = Authz::checkRole(Authnprovider::getSignedInUser());
+        if($role === 'admin'){
+            $sql = $this->db->prepare("select up.id_pl from user2playlist up;");
+            $sql->execute();
+        }
+        else{
+            $sql = $this->db->prepare("select up.id_pl from user u inner join user2playlist up on up.id_user=u.id where u.id = :idUser and u.email = :email;");
+            $sql->execute([':idUser' => $idUser, ':email' => $email]);
+        }
 
         //Vérifie s'il contient quelque chose à l'intérieur, sinon il retourne null
         if($sql->rowCount() > 0){
