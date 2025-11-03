@@ -7,9 +7,17 @@ RewriteBase /www/e67005u/web/annee2/Deefy
 
 #
 # Pour interdire l'accès aux répertoires contenant du code
-# RewriteRule ^sql(/.*|)$ - [NC,F]   # interdit l'accès à deefy/sql
-# RewriteRule ^getID3(/.*|)$ - [NC,F]   # interdit l'accès à deefy/getID3
-# RewriteRule ^vendor(/.*|)$ - [NC,F]   # interdit l'accès à deefy/vendor
-# RewriteRule ^config(/.*|)$ - [NC,F]   # interdit l'accès à deefy/config
-# RewriteRule ^src(/.*|)$ - [NC,F]   # interdit l'accès à deefy/src (il ne doit pas contenir index.php
-# RewriteRule \.ini$ - [NC,F]   # interdit l'accès à tous les fichiers .ini
+RewriteRule ^sql(/.*|)$ - [NC,F]   # interdit l'accès à deefy/sql
+RewriteRule ^getID3(/.*|)$ - [NC,F]   # interdit l'accès à deefy/getID3
+RewriteRule ^vendor(/.*|)$ - [NC,F]   # interdit l'accès à deefy/vendor
+RewriteRule ^config(/.*|)$ - [NC,F]   # interdit l'accès à deefy/config
+RewriteRule ^src/Classes/action(/.*|)$ - [NC,F]   # interdit l'accès à deefy/src/Classes/action
+RewriteRule ^src/Classes/auth(/.*|)$ - [NC,F]   # interdit l'accès à deefy/src/Classes/auth
+RewriteRule ^src/Classes/dispatch(/.*|)$ - [NC,F]   # interdit l'accès à deefy/src/Classes/dispatch
+RewriteRule ^src/Classes/exception(/.*|)$ - [NC,F]   # interdit l'accès à deefy/src/Classes/exception
+RewriteRule ^src/Classes/renderer(/.*|)$ - [NC,F]   # interdit l'accès à deefy/src/Classes/renderer
+RewriteRule ^src/Classes/repository(/.*|)$ - [NC,F]   # interdit l'accès à deefy/src/Classes/repository
+RewriteRule ^src/Classes/audio/lists(/.*|)$ - [NC,F]   # interdit l'accès à deefy/src/Classes/audio/lists
+RewriteRule ^src/Classes/audio/tracks(/.*|)$ - [NC,F]   # interdit l'accès à deefy/src/Classes/audio/tracks
+# RewriteRule ^src(/.*|)$ - [NC,F]   # interdit l'accès à deefy/src (il ne doit pas contenir index.php)
+RewriteRule \.ini$ - [NC,F]   # interdit l'accès à tous les fichiers .ini
