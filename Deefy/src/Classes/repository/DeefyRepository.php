@@ -313,7 +313,7 @@ class DeefyRepository
                 $sql->execute();
                 if($sql->rowCount() >= 1){
                     $id_createur_pl = $sql->fetch(PDO::FETCH_OBJ);
-                    echo $id_createur_pl->id_user ."---". Authnprovider::getSignedInUser()["id"];
+                    //echo $id_createur_pl->id_user ."---". Authnprovider::getSignedInUser()["id"];
                     if($id_createur_pl->id_user != Authnprovider::getSignedInUser()["id"]){
                         throw new AuthnException("Cette playlist ne vous appartient pas !");
                     }
@@ -321,7 +321,7 @@ class DeefyRepository
 
 
                 //insertion
-                $sql = $this->db->prepare("INSERT INTO shareplaylist (id_user, id_pl, role) VALUES (:idUser, :idPlaylist, :role);");
+                $sql = $this->db->prepare("INSERT INTO sharePlaylist (id_user, id_pl, role) VALUES (:idUser, :idPlaylist, :role);");
                 $params = [
                     ':idUser' => $user->id,
                     ':idPlaylist' => $idPlaylist,
