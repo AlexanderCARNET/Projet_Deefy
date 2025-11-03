@@ -5,6 +5,8 @@ namespace iutnc\deefy\action;
 use DateTime;
 use iutnc\deefy\audio\lists\Playlist;
 use iutnc\deefy\audio\tracks\PodcastTrack;
+use iutnc\deefy\auth\Authnprovider;
+use iutnc\deefy\auth\Authz;
 use iutnc\deefy\repository\DeefyRepository;
 use PDO;
 
@@ -40,7 +42,7 @@ class AddPodcastTrackAction extends Action
 
                 //enregistrement du fichier audio
                 $nouvNom = uniqid("audio_") . ".mp3";
-                $chemin = "src/Classes/audio/" . $nouvNom;
+                $chemin = "./src/classes/audio/" . $nouvNom;
                 move_uploaded_file($_FILES['monAudio']['tmp_name'],$chemin);
 
                 //creation de track
@@ -52,12 +54,24 @@ class AddPodcastTrackAction extends Action
                 //enregistrement dans la bd
                 //enregistrement du track
                 $id_track = DeefyRepository::getInstance()->savePodcastTrack($podcastTrack);
+
+                if(Authz::checkRole(Authnprovider::getSignedInUser())=='admin'){
+                    $prepare = DeefyRepository::getInstance()->db->prepare("select id from playlist 
+                    where playlist.nom = ?");
+                    $prepare->bindValue(1,$playlist->nom);
+                }
+                else if(DeefyRepository::getInstance()->checkSharePermissions(Authnprovider::getSignedInUser()['id'], $playlist->nom)==2){
+                    $prepare = DeefyRepository::getInstance()->db->prepare("select id from playlist 
+                    where playlist.nom = ?");
+                    $prepare->bindValue(1,$playlist->nom);
+                }else {
+                    $prepare = DeefyRepository::getInstance()->db->prepare("select id from playlist 
+                    inner join user2playlist on user2playlist.id_pl = playlist.id
+                    where playlist.nom = ? and user2playlist.id_user = ?");
+                    $prepare->bindValue(1,$playlist->nom);
+                    $prepare->bindValue(2,$_SESSION['user']["id"]);
+                }
                 //recuperation de l'id de la playlist
-                $prepare = DeefyRepository::getInstance()->db->prepare("select id from playlist 
-                inner join user2playlist on user2playlist.id_pl = playlist.id
-                where playlist.nom = ? and user2playlist.id_user = ?");
-                $prepare->bindValue(1,$playlist->nom);
-                $prepare->bindValue(2,$_SESSION['user']["id"]);
                 $prepare->execute();
                 $col = $prepare->fetch(PDO::FETCH_ASSOC);
                 //enregistrement du track pour la playlist
