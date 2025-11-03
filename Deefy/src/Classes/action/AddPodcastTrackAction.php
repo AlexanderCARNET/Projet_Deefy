@@ -59,6 +59,11 @@ class AddPodcastTrackAction extends Action
                     $prepare = DeefyRepository::getInstance()->db->prepare("select id from playlist 
                     where playlist.nom = ?");
                     $prepare->bindValue(1,$playlist->nom);
+                }
+                else if(DeefyRepository::getInstance()->checkSharePermissions(Authnprovider::getSignedInUser()['id'], $playlist->nom)==2){
+                    $prepare = DeefyRepository::getInstance()->db->prepare("select id from playlist 
+                    where playlist.nom = ?");
+                    $prepare->bindValue(1,$playlist->nom);
                 }else {
                     $prepare = DeefyRepository::getInstance()->db->prepare("select id from playlist 
                     inner join user2playlist on user2playlist.id_pl = playlist.id
