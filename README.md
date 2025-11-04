@@ -3,6 +3,8 @@
 BOUAOUKEL Walid
 CARNET Alexander
 
+lien webetu : https://webetu.iutnc.univ-lorraine.fr/www/e67005u/web/annee2/Deefy/
+
 
 Information comptes utilisateurs : 
 
